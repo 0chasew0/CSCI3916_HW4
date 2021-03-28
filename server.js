@@ -135,7 +135,7 @@ router.delete('/movies/:id', (req, res) => {
 
 
 app.use('/', router);
-app.listen(8080);
+app.listen(process.env.PORT || 8080);
 module.exports = app; // for testing only
 
 
