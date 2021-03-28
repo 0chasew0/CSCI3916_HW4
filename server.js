@@ -1,5 +1,5 @@
 /*
-CSC3916 HW3
+CSC3916 HW4
 File: Server.js
 Description: Web API scaffolding for Movie API
  */
@@ -46,6 +46,8 @@ router.post('/signup', function(req, res) {
         user.username = req.body.username;
         user.password = req.body.password;
 
+        res.send('got here')
+
         user.save(function(err){
             if (err) {
                 if (err.code == 11000)
@@ -54,7 +56,7 @@ router.post('/signup', function(req, res) {
                     return res.json(err);
             }
 
-            res.json({success: true, msg: 'Successfully created new user.'})
+            res.send(json({success: true, msg: 'Successfully created new user.'}))
         });
     }
 });
@@ -89,11 +91,8 @@ router.get('/movies', (req, res) => {
 
     const movie = db.collection('movies').findOne({Title: req.body.Title});
 
-    try{
-        res.send(movie);
-    } catch(err) {
-        res.status(500).send(err);
-    }
+    res.send(movie);
+    
 
 });
 
