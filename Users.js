@@ -6,8 +6,11 @@ var bcrypt = require('bcrypt-nodejs');
 mongoose.Promise = global.Promise;
 
 //mongoose.connect(process.env.DB, { useNewUrlParser: true });
+
+const uri = process.env.DB;
+
 try {
-    mongoose.connect( process.env.DB, {useNewUrlParser: true, useUnifiedTopology: true}, () =>
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true}, () =>
         console.log("connected to mongo atlas (users)"));
 }catch (error) {
     console.log(process.env.DB)
