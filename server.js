@@ -53,10 +53,10 @@ router.post('/signup', function(req, res) {
                 if (err.code == 11000)
                     return res.json({ success: false, message: 'A user with that username already exists.'});
                 else
-                    return res.send(err);
+                    return res.send('err');
             }
 
-            res.send(json({success: true, msg: 'Successfully created new user.'}))
+            res.send({success: true, msg: 'Successfully created new user.'})
         });
     }
 });
