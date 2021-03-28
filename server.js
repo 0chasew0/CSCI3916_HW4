@@ -47,7 +47,7 @@ router.post('/signup', function(req, res) {
         user.username = req.body.username;
         user.password = req.body.password;
 
-        Users.insertMany(user, function(err){
+        user.save(function(err){
             if (err) {
                 if (err.code == 11000)
                     return res.send({ success: false, message: 'A user with that username already exists.'});
@@ -135,7 +135,7 @@ router.delete('/movies/:id', (req, res) => {
 
 
 app.use('/', router);
-app.listen(process.env.PORT || 8080);
+app.listen(8080);
 module.exports = app; // for testing only
 
 
