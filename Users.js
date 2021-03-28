@@ -13,7 +13,7 @@ try {
     mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true}, () =>
         console.log("connected to mongo atlas (users)"));
 }catch (error) {
-    console.log(process.env.DB)
+    console.log(uri)
     console.log("could not connect");
 }
 mongoose.set('useCreateIndex', true);
