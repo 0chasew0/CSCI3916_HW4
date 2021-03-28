@@ -7,11 +7,12 @@ mongoose.Promise = global.Promise;
 
 const uri = process.env.DB;
 
-
-mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true})
-.then(() => console.log("connected to mongo atlas (users)"))
-.catch(err => console.log(err))
-
+try {
+    mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true}, () =>
+        console.log("connected to mongo atlas (users)"));
+}catch (error) {
+    console.log("could not connect");
+}
 
 //user schema
 var UserSchema = new Schema({
