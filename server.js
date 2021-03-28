@@ -13,6 +13,7 @@ var authJwtController = require('./auth_jwt');
 var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
+var mongoose = require('mongoose')
 //var Movie = require('./Movies');
 const { db } = require('./Movies');
 const Users = require('./Users');
@@ -25,6 +26,14 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(passport.initialize());
 
 var router = express.Router();
+
+mongoose.Promise = global.Promise;
+const uri = process.env.DB;
+
+mongoose.connect(uri, {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true}).
+catch(err => console.log(err));
+
+console.log("connected to mongo atlas (users)");
 
 function getJSONObjectForMovie(req) {
     var json = {
