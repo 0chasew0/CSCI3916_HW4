@@ -9,6 +9,7 @@ try {
     mongoose.connect( process.env.DB, {useNewUrlParser: true, useUnifiedTopology: true}, () =>
         console.log("connected to mongo atlas (users)"));
 }catch (error) {
+    console.log(process.env.DB)
     console.log("could not connect");
 }
 mongoose.set('useCreateIndex', true);
@@ -22,8 +23,6 @@ var UserSchema = new Schema({
 
 UserSchema.pre('save', function(next) {
     var user = this;
-
-    console.log(this);
 
     //hash the password
     if (!user.isModified('password')) return next();
