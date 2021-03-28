@@ -15,6 +15,7 @@ var cors = require('cors');
 var User = require('./Users');
 //var Movie = require('./Movies');
 const { db } = require('./Movies');
+const Users = require('./Users');
 
 var app = express();
 app.use(cors());
@@ -46,7 +47,7 @@ router.post('/signup', function(req, res) {
         user.username = req.body.username;
         user.password = req.body.password;
 
-        user.save(function(err){
+        Users.insertOne(user, function(err){
             if (err) {
                 if (err.code == 11000)
                     return res.send({ success: false, message: 'A user with that username already exists.'});
