@@ -39,19 +39,17 @@ function getJSONObjectForMovie(req) {
 
 router.post('/signup', function(req, res) {
     if (!req.body.username || !req.body.password) {
-        res.json({success: false, msg: 'Please include both username and password to signup.'})
+        res.send({success: false, msg: 'Please include both username and password to signup.'})
     } else {
         var user = new User();
         user.name = req.body.name;
         user.username = req.body.username;
         user.password = req.body.password;
 
-        res.send(req.body)
-
         user.save(function(err){
             if (err) {
                 if (err.code == 11000)
-                    return res.json({ success: false, message: 'A user with that username already exists.'});
+                    return res.send({ success: false, message: 'A user with that username already exists.'});
                 else
                     return res.send('err');
             }
@@ -75,7 +73,7 @@ router.post('/signin', function (req, res) {
             if (isMatch) {
                 var userToken = { id: user.id, username: user.username };
                 var token = jwt.sign(userToken, process.env.SECRET_KEY);
-                res.json ({success: true, token: 'JWT ' + token});
+                res.json({success: true, token: 'JWT ' + token});
             }
             else {
                 res.status(401).send({success: false, msg: 'Authentication failed.'});
