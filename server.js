@@ -110,7 +110,7 @@ router.get('/movies', (req, res) => {
             movieMap[movie._id] = movie; 
         })
 
-        res.send(movieMap);
+        res.json({success: true, movies: Moviemap});
     })
 });
 
@@ -153,12 +153,12 @@ router.put('/movies/:id', (req, res) => {
             console.log(err);
         }
         
-        res.send(movie);
+        res.json({success:true, movieupdated: movie});
     });
 
 });
 
-router.delete('/mov/ies/:id', (req, res) => {
+router.delete('/movies/:id', (req, res) => {
 
     Movie.findByIdAndDelete(req.params._id, function (err) {
         if (err) {
