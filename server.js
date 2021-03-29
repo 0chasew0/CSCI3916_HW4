@@ -177,7 +177,7 @@ router.delete('/movies/:id', (req, res) => {
 router.get('/moviereviews', (req, res) => {
 
     // should be a bool
-    const togglereviews = req.query.reviews;
+    var togglereviews = req.query.reviews;
 
     console.log(togglereviews)
 
