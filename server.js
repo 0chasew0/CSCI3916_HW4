@@ -98,15 +98,9 @@ router.post('/signin', function (req, res) {
 
 // GET movies gets all the movies in the database
 router.get('/movies', (req, res) => {
-    //const movie = await Movie.find({});
-
-    //req = getJSONObjectForMovie(req);
 
     const movie = db.collection('movies').findOne({Title: req.body.Title});
-
     res.send(movie);
-    
-
 });
 
 // POST movies adds a movie to the database
@@ -121,8 +115,7 @@ router.post('/movies', (req, res) => {
     movie.Title = req.body.Title;
     movie.YearReleased = req.body.YearReleased;
     movie.Genre = req.body.Genre;
-    movie.Actors.ActorNames = req.body.Actors.ActorNames;
-    movie.Actors.CharacterNames = req.body.Actors.CharacterNames;
+    movie.Actors = req.body.Actors;
 
     movie.save(function(err) {
         if (err) {
