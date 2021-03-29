@@ -173,10 +173,10 @@ router.delete('/movies/:id', (req, res) => {
 });
 
 // GET movies gets all the movies in the database
-router.get('/movies?', (req, res) => {
+router.get('/moviereviews', (req, res) => {
 
     // should be a bool
-    var togglereviews = req.query.reviews;
+    const togglereviews = req.query.reviews;
 
     console.log(togglereviews)
 
