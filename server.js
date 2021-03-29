@@ -107,7 +107,7 @@ router.get('/movies', (req, res) => {
         var movieMap = {};
 
         movies.forEach(function(movie) {
-            movieMap[movie.title] = movie; 
+            movieMap[movie._id] = movie; 
         })
 
         res.send(movieMap);
