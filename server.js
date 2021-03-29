@@ -176,35 +176,43 @@ router.delete('/movies/:id', (req, res) => {
 router.post('/movies/reviews', (req, res) => {
 
     if (!req.body.ReviewerName || !req.body.Quote || !req.body.Rating || req.body.MovieName) {
-        res.send({success: false, msg: 'Please include a ReviewerName, quote, rating, and a moviename.'})
+        res.send({
+            success: false,
+            msg: 'Please include a ReviewerName, quote, rating, and a moviename.'
+        })
     }
 
     const review = new Review();
-    
+
     review.ReviewerName = req.body.ReviewerName;
     review.Quote = req.body.Quote;
     review.Rating = req.body.Rating;
     review.MovieName = req.body.MovieName;
 
     // make sure the movie is in the db, if so, save the review for that movie
-    Movie.findOne({Title: review.MovieName}, function(err) {
+    Movie.findOne({
+        Title: review.MovieName
+    }, function (err) {
         if (err) {
             console.log(err)
             res.send(err)
         }
 
-        review.save(function(err) {
-        if (err) {
-            res.send(err);
-            console.log(err);
-        }
+        review.save(function (err) {
+            if (err) {
+                res.send(err);
+                console.log(err);
+            }
 
-        res.json({success: true, review: review});
+            res.json({
+                success: true,
+                review: review
+            });
         })
 
 
     })
-    
+
 });
 
 
