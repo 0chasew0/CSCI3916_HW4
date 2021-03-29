@@ -98,9 +98,20 @@ router.post('/signin', function (req, res) {
 
 // GET movies gets all the movies in the database
 router.get('/movies', (req, res) => {
+    Movie.find({}, function(err, movies) {
+        if (err) {
+            console.log(err);
+            res.send(err);
+        }
 
-    const movie = db.collection('movies').findOne({Title: req.body.Title});
-    res.send(movie);
+        var movieMap = {};
+
+        movies.forEach(function(movie) {
+            movieMap[movie._id] = movie; 
+        })
+
+        res.send(movieMap);
+    })
 });
 
 // POST movies adds a movie to the database
