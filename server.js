@@ -205,8 +205,7 @@ router.post('/movies/reviews', (req, res) => {
             }
 
             res.json({
-                success: true,
-                review: review
+                success: true
             });
         })
 
