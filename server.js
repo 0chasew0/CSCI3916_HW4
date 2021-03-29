@@ -175,7 +175,7 @@ router.delete('/movies/:id', (req, res) => {
 // POST reviews adds a review to the database, given that the movie exists
 router.post('/movies/reviews', (req, res) => {
 
-    if (!req.body.ReviewerName || !req.body.Quote || !req.body.Rating || req.body.MovieName) {
+    if (!req.body.ReviewerName || !req.body.Quote || !req.body.Rating || !req.body.MovieName) {
         res.send({
             success: false,
             msg: 'Please include a ReviewerName, quote, rating, and a moviename.'
@@ -203,6 +203,11 @@ router.post('/movies/reviews', (req, res) => {
                 res.send(err);
                 console.log(err);
             }
+
+            res.send({
+                success: true,
+                review: review
+            })
         })
 
 
