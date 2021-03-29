@@ -14,7 +14,7 @@ var jwt = require('jsonwebtoken');
 var cors = require('cors');
 var User = require('./Users');
 var mongoose = require('mongoose')
-//var Movie = require('./Movies');
+var Movie = require('./Movies');
 const { db } = require('./Movies');
 const Users = require('./Users');
 
@@ -96,6 +96,7 @@ router.post('/signin', function (req, res) {
     })
 });
 
+// GET movies gets all the movies in the database
 router.get('/movies', (req, res) => {
     //const movie = await Movie.find({});
 
@@ -108,18 +109,29 @@ router.get('/movies', (req, res) => {
 
 });
 
+// POST movies adds a movie to the database
 router.post('/movies', (req, res) => {
 
-    //req = getJSONObjectForMovie(req);
-
-    const movie = new Movie(req.body);
-
-    try{
-        movie.save();
-        res.send(movie);
-    } catch(err) {
-        res.status(500).send(err);
+    if (!req.body.Title || !req.body.YearReleased || !req.body.Genre || (req.body.Actors < 3)) {
+        res.send({success: false, msg: 'Please include a title, year, genre, and at least 3 actors.'})
     }
+
+    const movie = new Movie();
+
+    movie.Title = req.body.Title;
+    movie.YearReleased = req.body.YearReleased;
+    movie.Genre = req.body.Genre;
+    movie.Actors.ActorNames = req.body.Actors.ActorNames;
+    movie.Actors.CharacterNames = req.body.Actors.CharacterNames;
+
+    movie.save(function(err) {
+        if (err) {
+            res.send(err);
+            console.log(err);
+        }
+
+        res.json({success: true, movie: movie});
+    })
 });
 
 router.put('/movies/:id', (req, res) => {
