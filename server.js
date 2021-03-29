@@ -190,13 +190,20 @@ router.post('/movies/reviews', (req, res) => {
     review.MovieName = req.body.MovieName;
 
     // make sure the movie is in the db, if so, save the review for that movie
-    Movie.findOne({
-        Title: review.MovieName
-    }, function (err) {
-        if (err) {
-            console.log(err)
-            res.send(err)
+
+    db.movies.aggregate([
+        {
+            $lookup:
+            {
+                from: "reviews",
+                localfield: "Title",
+                foreignField: "MovieName",
+                as: "MoviesWithReviews"
+            }
         }
+
+    ])
+
 
         review.save(function (err) {
             if (err) {
@@ -210,8 +217,6 @@ router.post('/movies/reviews', (req, res) => {
             })
         })
 
-
-    })
 
 });
 
