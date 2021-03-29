@@ -216,7 +216,7 @@ router.get('/movies?', (req, res) => {
 
 
 // POST reviews adds a review to the database, given that the movie exists
-router.post('/movies?', (req, res) => {
+router.post('/movies/reviews', (req, res) => {
 
     if (!req.body.ReviewerName || !req.body.Quote || !req.body.Rating || !req.body.MovieName) {
         res.send({
