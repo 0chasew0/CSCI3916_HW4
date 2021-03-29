@@ -140,8 +140,12 @@ router.post('/movies', (req, res) => {
 
 router.put('/movies/:id', (req, res) => {
 
-    var movie = new Movie();
-    movie = req.body;
+    const movie = new Movie();
+
+    movie.Title = req.body.Title;
+    movie.YearReleased = req.body.YearReleased;
+    movie.Genre = req.body.Genre;
+    movie.Actors = req.body.Actors;
 
     Movie.findByIdAndUpdate(req.params._id, movie, function (err) {
         if (err) {
