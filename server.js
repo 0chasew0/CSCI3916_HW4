@@ -158,7 +158,7 @@ router.put('/movies/:id', (req, res) => {
 
 });
 
-router.delete('/movies/:id', (req, res) => {
+router.delete('/mov/ies/:id', (req, res) => {
 
     Movie.findByIdAndDelete(req.params._id, function (err) {
         if (err) {
