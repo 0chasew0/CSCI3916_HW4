@@ -184,7 +184,7 @@ router.get('/moviereviews', (req, res) => {
         // show movies + reviews (join db's using $lookup)
         Movie.aggregate([{
                 $lookup: {
-                    from: "reviews",
+                    from: "Review",
                     localfield: "Title",
                     foreignField: "MovieName",
                     as: "MovieReviews"
@@ -192,6 +192,8 @@ router.get('/moviereviews', (req, res) => {
             }
 
         ])
+
+        console.log("got here")
 
         // show movies, reviews should show as well
         Movie.find({}, function (err, movies) {
