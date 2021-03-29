@@ -18,6 +18,7 @@ var Movie = require('./Movies');
 var Review = require('./reviews');
 const { db } = require('./Movies');
 const Users = require('./Users');
+const reviews = require('./reviews');
 
 var app = express();
 app.use(cors());
@@ -193,7 +194,6 @@ router.get('/moviereviews', (req, res) => {
 
         // ])
 
-
         // show movies, reviews should show as well
         Movie.find({}, function (err, movies) {
             if (err) {
@@ -207,26 +207,21 @@ router.get('/moviereviews', (req, res) => {
                 movieMap[movie._id] = movie;
             })
 
-            res.json({
-                success: true,
-                movies: movieMap
-            });
-        })
+            Review.find({}, function(err, reviews) {
+                if (err) {
+                    console.log(err);
+                    res.send(err);
+                }
+                var reviewMap = {};
 
-        Review.find({}, function (err, reviews) {
-            if (err) {
-                console.log(err);
-                res.send(err);
-            }
-
-            var reviewMap = {};
-
-            reviews.forEach(function (review) {
-                reviewMap[review._id] = review;
+                reviews.forEach(function (review) {
+                    reviewMap[review._id] = review;
+                })
             })
 
             res.json({
                 success: true,
+                movies: movieMap,
                 reviews: reviewMap
             });
         })
