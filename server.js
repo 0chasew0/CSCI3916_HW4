@@ -178,6 +178,8 @@ router.get('/movies?', (req, res) => {
     // should be a bool
     var togglereviews = req.query.reviews;
 
+    console.log(togglereviews)
+
     if (togglereviews) {
         // show movies + reviews (join db's using $lookup)
         Movie.aggregate([{
