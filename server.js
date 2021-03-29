@@ -172,8 +172,51 @@ router.delete('/movies/:id', (req, res) => {
 
 });
 
+// GET movies gets all the movies in the database
+router.get('/movies?', (req, res) => {
+
+    // should be either true or false
+    var togglereviews = req.query.reviews;
+
+    if (togglereviews) {
+        // show movies + reviews (join db's)
+        Movie.aggregate([{
+                $lookup: {
+                    from: "Review",
+                    localfield: "Title",
+                    foreignField: "MovieName",
+                    as: "Reviews"
+                }
+            }
+
+        ])
+    } else {
+        // just show movies
+        Movie.find({}, function (err, movies) {
+            if (err) {
+                console.log(err);
+                res.send(err);
+            }
+
+            var movieMap = {};
+
+            movies.forEach(function (movie) {
+                movieMap[movie._id] = movie;
+            })
+
+            res.json({
+                success: true,
+                movies: movieMap
+            });
+        })
+    }
+
+
+});
+
+
 // POST reviews adds a review to the database, given that the movie exists
-router.post('/movies/reviews', (req, res) => {
+router.post('/movies?', (req, res) => {
 
     if (!req.body.ReviewerName || !req.body.Quote || !req.body.Rating || !req.body.MovieName) {
         res.send({
@@ -190,21 +233,15 @@ router.post('/movies/reviews', (req, res) => {
     review.MovieName = req.body.MovieName;
 
     // make sure the movie is in the db, if so, save the review for that movie
-
-    db.movies.aggregate([
-        {
-            $lookup:
-            {
-                from: "reviews",
-                localfield: "Title",
-                foreignField: "MovieName",
-                as: "MoviesWithReviews"
-            }
+    Movie.findOne({
+        Title: review.MovieName
+    }).exec(function (err) {
+        if (err) {
+            console.log(err);
+            res.send(err);
         }
-
-    ])
-
-
+        
+        // if movie is in database, save review for this movie
         review.save(function (err) {
             if (err) {
                 res.send(err);
@@ -216,8 +253,7 @@ router.post('/movies/reviews', (req, res) => {
                 review: review
             })
         })
-
-
+    })
 });
 
 
