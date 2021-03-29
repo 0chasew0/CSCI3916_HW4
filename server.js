@@ -217,13 +217,14 @@ router.get('/moviereviews', (req, res) => {
                 reviews.forEach(function (review) {
                     reviewMap[review._id] = review;
                 })
-            })
 
-            res.json({
-                success: true,
-                movies: movieMap,
-                reviews: reviewMap
-            });
+                res.json({
+                    success: true,
+                    movies: movieMap,
+                    reviews: reviewMap
+                });
+            })
+            
         })
 
     } else {
