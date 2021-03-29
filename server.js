@@ -235,11 +235,13 @@ router.post('/movies/reviews', (req, res) => {
     // make sure the movie is in the db, if so, save the review for that movie
     Movie.findOne({
         Title: review.MovieName
-    }).exec(function (err) {
+    }).exec(function (err, mov) {
         if (err) {
             console.log(err);
             res.send(err);
         }
+
+        console.log(mov)
         
         // if movie is in database, save review for this movie
         review.save(function (err) {
