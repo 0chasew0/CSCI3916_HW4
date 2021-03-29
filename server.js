@@ -152,15 +152,11 @@ router.put('/movies/:id', (req, res) => {
             res.send(err);
             console.log(err);
         }
-    });
-    movie.save(function (err) {
-        if (err) {
-            res.send(err);
-            console.log(err);
-        }
+        
+        res.send(movie);
     });
 
-    res.send(movie);
+    
 
 
 });
