@@ -156,21 +156,18 @@ router.put('/movies/:id', (req, res) => {
         res.send(movie);
     });
 
-    
-
-
 });
 
 router.delete('/movies/:id', (req, res) => {
-    try {
-        const movie = Movie.findByIdAndDelete(req.params._id);
 
-        if (!movie) res.status(404).send("No item found");
-        res.status(200).send()
-
-    } catch (err) {
-        res.status(500).send(err)
-    }
+    Movie.findByIdAndDelete(req.params._id, function (err) {
+        if (err) {
+            res.send(err);
+            console.log(err);
+        }
+        
+        res.json({success: true, message: "movie deleted"});
+    });
 
 });
 
