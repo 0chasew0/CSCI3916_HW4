@@ -15,6 +15,7 @@ var cors = require('cors');
 var User = require('./Users');
 var mongoose = require('mongoose')
 var Movie = require('./Movies');
+var Review = require('./reviews');
 const { db } = require('./Movies');
 const Users = require('./Users');
 
@@ -169,6 +170,41 @@ router.delete('/movies/:id', (req, res) => {
         res.json({success: true, message: "movie deleted"});
     });
 
+});
+
+// POST reviews adds a review to the database, given that the movie exists
+router.post('/movies/reviews', (req, res) => {
+
+    if (!req.body.ReviewerName || !req.body.Quote || !req.body.Rating || req.body.MovieName) {
+        res.send({success: false, msg: 'Please include a ReviewerName, quote, rating, and a moviename.'})
+    }
+
+    const review = new Review();
+    
+    review.ReviewerName = req.body.ReviewerName;
+    review.Quote = req.body.Quote;
+    review.Rating = req.body.Rating;
+    review.MovieName = req.body.MovieName;
+
+    // make sure the movie is in the db, if so, save the review for that movie
+    Movie.findOne({Title: review.MovieName}, function(err) {
+        if (err) {
+            console.log(err)
+            res.send(err)
+        }
+
+        review.save(function(err) {
+        if (err) {
+            res.send(err);
+            console.log(err);
+        }
+
+        res.json({success: true, movie: movie});
+        })
+
+
+    })
+    
 });
 
 
