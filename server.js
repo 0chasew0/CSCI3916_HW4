@@ -139,26 +139,26 @@ router.post('/movies', (req, res) => {
 });
 
 router.put('/movies/:id', (req, res) => {
-    
-        var movie = new Movie();
-        movie = req.body;
 
-        Movie.findByIdAndUpdate(req.params._id, movie, function(err){
-            if (err) {
-                res.send(err);
-                console.log(err);
-            }
-        
-            movie.save(function(err) {
-            if (err) {
-                res.send(err);
-                console.log(err);
-            }
-            });
+    var movie = new Movie();
+    movie = req.body;
 
-            res.send(movie);
-        });
-    
+    Movie.findByIdAndUpdate(req.params._id, movie, function (err) {
+        if (err) {
+            res.send(err);
+            console.log(err);
+        }
+    });
+    movie.save(function (err) {
+        if (err) {
+            res.send(err);
+            console.log(err);
+        }
+    });
+
+    res.send(movie);
+
+
 });
 
 router.delete('/movies/:id', (req, res) => {
