@@ -110,7 +110,7 @@ router.get('/movies', (req, res) => {
             movieMap[movie._id] = movie; 
         })
 
-        res.json({success: true, movies: Moviemap});
+        res.json({success: true, movies: movieMap});
     })
 });
 
