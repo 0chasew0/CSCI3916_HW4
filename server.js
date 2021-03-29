@@ -240,8 +240,12 @@ router.post('/movies/reviews', (req, res) => {
             console.log(err);
             res.send(err);
         }
-
-        console.log(mov)
+        
+        // make sure mov is not null aka it exists
+        if (mov === null) {
+            res.json({success: false, msg: "couldn't find movie, check that movie name is correct"})
+            return next(new Error([error])); // throw error, prevent node from continuing on with save, etc.
+        }
         
         // if movie is in database, save review for this movie
         review.save(function (err) {
