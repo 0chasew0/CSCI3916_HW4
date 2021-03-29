@@ -203,10 +203,6 @@ router.post('/movies/reviews', (req, res) => {
                 res.send(err);
                 console.log(err);
             }
-
-            res.json({
-                success: true
-            });
         })
 
 
