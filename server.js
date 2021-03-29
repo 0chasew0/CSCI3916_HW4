@@ -175,11 +175,11 @@ router.delete('/movies/:id', (req, res) => {
 // GET movies gets all the movies in the database
 router.get('/movies?', (req, res) => {
 
-    // should be either true or false
+    // should be a bool
     var togglereviews = req.query.reviews;
 
     if (togglereviews) {
-        // show movies + reviews (join db's)
+        // show movies + reviews (join db's using $lookup)
         Movie.aggregate([{
                 $lookup: {
                     from: "Review",
@@ -190,6 +190,26 @@ router.get('/movies?', (req, res) => {
             }
 
         ])
+
+        // show movies, reviews should show as well
+        Movie.find({}, function (err, movies) {
+            if (err) {
+                console.log(err);
+                res.send(err);
+            }
+
+            var movieMap = {};
+
+            movies.forEach(function (movie) {
+                movieMap[movie._id] = movie;
+            })
+
+            res.json({
+                success: true,
+                movies: movieMap
+            });
+        })
+
     } else {
         // just show movies
         Movie.find({}, function (err, movies) {
