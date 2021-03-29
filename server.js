@@ -139,18 +139,31 @@ router.post('/movies', (req, res) => {
 });
 
 router.put('/movies/:id', (req, res) => {
-    try {
-        const movie = Movie.findByIdAndUpdate(req._id, req.body)
-        movie.save()
-        res.send(movie)
-    } catch (err) {
-        res.status(500).send(err)
-    }
+    
+        const movie = new Movie();
+        movie = req.body;
+        
+        Movie.findByIdAndUpdate(req.params._id, movie, function(err){
+            if (err) {
+                res.send(err);
+                console.log(err);
+            }
+        
+            movie.save(function(err) {
+            if (err) {
+                res.send(err);
+                console.log(err);
+            }
+            });
+
+            res.send(movie);
+        });
+    
 });
 
 router.delete('/movies/:id', (req, res) => {
     try {
-        const movie = Movie.findByIdAndDelete(req._id);
+        const movie = Movie.findByIdAndDelete(req.params._id);
 
         if (!movie) res.status(404).send("No item found");
         res.status(200).send()
