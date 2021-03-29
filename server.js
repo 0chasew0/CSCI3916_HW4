@@ -182,18 +182,17 @@ router.get('/moviereviews', (req, res) => {
 
     if (togglereviews) {
         // show movies + reviews (join db's using $lookup)
-        Movie.aggregate([{
-                $lookup: {
-                    from: "Review",
-                    localfield: "Title",
-                    foreignField: "MovieName",
-                    as: "MovieReviews"
-                }
-            }
+        // Movie.aggregate([{
+        //         $lookup: {
+        //             from: "Review",
+        //             localfield: "Title",
+        //             foreignField: "MovieName",
+        //             as: "MovieReviews"
+        //         }
+        //     }
 
-        ])
+        // ])
 
-        console.log("got here")
 
         // show movies, reviews should show as well
         Movie.find({}, function (err, movies) {
@@ -211,6 +210,24 @@ router.get('/moviereviews', (req, res) => {
             res.json({
                 success: true,
                 movies: movieMap
+            });
+        })
+
+        Review.find({}, function (err, reviews) {
+            if (err) {
+                console.log(err);
+                res.send(err);
+            }
+
+            var reviewMap = {};
+
+            reviews.forEach(function (review) {
+                reviewMap[review._id] = review;
+            })
+
+            res.json({
+                success: true,
+                reviews: reviewMap
             });
         })
 
