@@ -199,7 +199,7 @@ router.post('/movies/reviews', (req, res) => {
             console.log(err);
         }
 
-        res.json({success: true, movie: movie});
+        res.json({success: true, review: review});
         })
 
 
