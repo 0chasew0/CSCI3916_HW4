@@ -78,7 +78,7 @@ router.post('/signin', function (req, res) {
     userNew.password = req.body.password;
 
     console.log(userNew);
-    
+
     User.findOne({ username: userNew.username }).select('name username password').exec(function(err, user) {
         if (err) {
             console.log(err);
@@ -109,7 +109,7 @@ router.get('/movies', (req, res) => {
         var movieMap = {};
 
         movies.forEach(function(movie) {
-            movieMap[movie._id] = movie; 
+            movieMap[movie._id] = movie;
         })
 
         res.json({success: true, movies: movieMap});
@@ -140,6 +140,20 @@ router.post('/movies', (req, res) => {
     })
 });
 
+// get a single movie by ID
+router.get('/movies/:id', (req,res) => {
+    const movie = new Movie();
+
+    Movie.findById(req.params._id, movie, function (err) {
+        if (err) {
+            res.send(err);
+            console.log(err);
+        }
+
+        res.json({success: true, movie: movie})
+    })
+})
+
 router.put('/movies/:id', (req, res) => {
 
     const movie = new Movie();
@@ -154,7 +168,7 @@ router.put('/movies/:id', (req, res) => {
             res.send(err);
             console.log(err);
         }
-        
+
         res.json({success:true, movieupdated: movie});
     });
 
@@ -167,13 +181,13 @@ router.delete('/movies/:id', (req, res) => {
             res.send(err);
             console.log(err);
         }
-        
+
         res.json({success: true, message: "movie deleted"});
     });
 
 });
 
-// GET movies gets all the movies in the database
+// GET movies gets all the movies with their reviews (fetchMovies)
 router.get('/moviereviews', (req, res) => {
 
     // should be a bool
@@ -182,17 +196,18 @@ router.get('/moviereviews', (req, res) => {
     console.log(togglereviews)
 
     if (togglereviews) {
-        // show movies + reviews (join db's using $lookup)
-        // Movie.aggregate([{
-        //         $lookup: {
-        //             from: "Review",
-        //             localfield: "Title",
-        //             foreignField: "MovieName",
-        //             as: "MovieReviews"
-        //         }
-        //     }
-
-        // ])
+        //show movies + reviews (join db's using $lookup)
+        Movie.aggregate([{
+                $lookup: {
+                    from: "reviews",
+                    localfield: "Title",
+                    foreignField: "MovieName",
+                    as: "MovieReviews"
+                }
+            }], function (err, res) {
+                res.send(err);
+                console.log(res);
+            });
 
         // show movies, reviews should show as well
         Movie.find({}, function (err, movies) {
@@ -207,24 +222,23 @@ router.get('/moviereviews', (req, res) => {
                 movieMap[movie._id] = movie;
             })
 
-            Review.find({}, function(err, reviews) {
-                if (err) {
-                    console.log(err);
-                    res.send(err);
-                }
-                var reviewMap = {};
+            // Review.find({}, function(err, reviews) {
+            //     if (err) {
+            //         console.log(err);
+            //         res.send(err);
+            //     }
+            //     var reviewMap = {};
 
-                reviews.forEach(function (review) {
-                    reviewMap[review._id] = review;
-                })
+            //     reviews.forEach(function (review) {
+            //         reviewMap[review._id] = review;
+            //     })
 
-                res.json({
-                    success: true,
-                    movies: movieMap,
-                    reviews: reviewMap
-                });
-            })
-            
+            res.json({
+                success: true,
+                movies: movieMap,
+            });    
+            // })
+
         })
 
     } else {
@@ -277,13 +291,13 @@ router.post('/movies/reviews', (req, res) => {
             console.log(err);
             res.send(err);
         }
-        
+
         // make sure mov is not null aka it exists
         if (mov === null) {
             res.json({success: false, msg: "couldn't find movie, check that movie name is correct"})
             return; // throw error, prevent node from continuing on with save, etc.
         }
-        
+
         // if movie is in database, save review for this movie
         review.save(function (err) {
             if (err) {
