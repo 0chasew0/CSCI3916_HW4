@@ -16,9 +16,6 @@ var User = require('./Users');
 var mongoose = require('mongoose')
 var Movie = require('./Movies');
 var Review = require('./reviews');
-const { db } = require('./Movies');
-const Users = require('./Users');
-const reviews = require('./reviews');
 
 var app = express();
 app.use(cors());
@@ -195,19 +192,25 @@ router.get('/moviereviews', (req, res) => {
 
     console.log(togglereviews)
 
+
     if (togglereviews) {
         //show movies + reviews (join db's using $lookup)
+        
         Movie.aggregate([{
-                $lookup: {
-                    from: "reviews",
-                    localfield: "Title",
-                    foreignField: "MovieName",
-                    as: "MovieReviews"
+            $lookup:
+            {
+                from: "reviews",
+                localField: "Title",
+                foreignField: "MovieName",
+                as: "Reviews"
+            }},
+            {$out: "reviews"}
+        ]).exec(function (err, res){
+                if (err) {
+                    res.send(err);
                 }
-            }], function (err, res) {
-                res.send(err);
-                console.log(res);
             });
+
 
         // show movies, reviews should show as well
         Movie.find({}, function (err, movies) {
@@ -222,24 +225,12 @@ router.get('/moviereviews', (req, res) => {
                 movieMap[movie._id] = movie;
             })
 
-            // Review.find({}, function(err, reviews) {
-            //     if (err) {
-            //         console.log(err);
-            //         res.send(err);
-            //     }
-            //     var reviewMap = {};
-
-            //     reviews.forEach(function (review) {
-            //         reviewMap[review._id] = review;
-            //     })
-
             res.json({
                 success: true,
-                movies: movieMap,
-            });    
-            // })
-
-        })
+                movies: movieMap
+            });
+        });
+    
 
     } else {
         // just show movies
@@ -260,6 +251,57 @@ router.get('/moviereviews', (req, res) => {
                 movies: movieMap
             });
         })
+    }
+
+
+});
+
+// GET movie gets one movie with the review by ID (fetchMovie)
+router.get('/moviereviews/:id', (req, res) => {
+
+    // should be a bool
+    var togglereviews = req.query.reviews;
+
+    var id = req.params.id;
+    console.log(id);
+
+    if (togglereviews) {
+        //show movies + reviews (join db's using $lookup)
+        
+        Movie.aggregate([{
+            $lookup:
+            {
+                from: "reviews",
+                localField: "Title",
+                foreignField: "MovieName",
+                as: "Reviews"
+            }},
+            {$out: "reviews"}
+        ]).exec(function (err, res){
+                if (err) {
+                    res.send(err);
+                }
+            });
+
+
+        // show movies, reviews should show as well
+        Movie.findById(id, function (err, movie) {
+            if (err) {
+                console.log(err);
+                res.send(err);
+            }
+
+            res.json({
+                success: true,
+                movie: movie
+            });
+        });
+
+    }else{
+        res.json({
+            success: false,
+            msg: "set reviews=true in query params"
+        });
     }
 
 
